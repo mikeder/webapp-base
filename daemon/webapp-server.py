@@ -4,9 +4,9 @@ cwd = os.getcwd()
 sys.path.append(cwd)
 import getopt
 import json
-from lib import BaseUtil
-from lib import DatabaseUtil
-from lib import WebappAPI
+from lib import AppUtils
+from lib import DatabaseUtils
+from lib import RestAPIHandlers
 from lib import WebHandlers
 import logging
 import tornado.httpserver
@@ -45,9 +45,9 @@ class Application(tornado.web.Application):
             (r'/', WebHandlers.Home),
             (r'/alarm/([A-Za-z0-9]+)', WebHandlers.Alarm),
             (r'/test', WebHandlers.Test),
-            (r'/api/alarm', WebappAPI.Alarm),
-            (r'/api/alarm/([A-Za-z0-9]+)', WebappAPI.Alarm),
-            (r'/api/heartbeat', WebappAPI.Heartbeat),
+            (r'/api/alarm', RestAPIHandlers.Alarm),
+            (r'/api/alarm/([A-Za-z0-9]+)', RestAPIHandlers.Alarm),
+            (r'/api/heartbeat', RestAPIHandlers.Heartbeat),
             (r'.*', WebHandlers.BaseHandler)
         ]
 
@@ -67,13 +67,14 @@ class Application(tornado.web.Application):
         loglocation = config['logging']['log_location'] + config['logging']['log_name']
         logger = logging.getLogger(config['app']['name'])
         logging.basicConfig(format='[%(levelname)s] %(asctime)s - %(name)s : %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', filename=loglocation, level=loglevel)
-        logger.info("Initializing" + config['app']['name'])
+        logger.info("Initializing " + config['app']['name'])
+        logger.info(config['app']['name'] + " running @ " + AppUtils.getInstance())
 
         # Provide global application properties
         # Check for active clients every check_interval
         #self.check_interval = config['client']['check_interval']
         # Single Database connection across all handlers
-        self.database = DatabaseUtil.AppDatabase(config['database'])
+        self.database = DatabaseUtils.AppDatabase(config['database'])
 
 def main():
     http_server = tornado.httpserver.HTTPServer(Application())
