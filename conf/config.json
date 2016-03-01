@@ -1,0 +1,22 @@
+{
+  "app": {
+    "name": "webapp"
+  },
+  "client": {
+    "title": "webapp",
+    "static_path": "static",
+    "template_path": "templates"
+  },
+  "database": {
+    "name": "webapp.db",
+    "version": 0
+  },
+  "logging": {
+    "log_location": "/var/log/webapp/",
+    "log_name": "webapp.log",
+    "log_level": "DEBUG"
+  },
+  "server": {
+    "port": 8001
+  }
+}
