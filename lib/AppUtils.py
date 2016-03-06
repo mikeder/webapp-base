@@ -3,12 +3,13 @@ import random
 import hashlib
 import time
 
-def getInstance(self):
+
+def getInstance():
     fqdn = socket.getfqdn()
     if fqdn.endswith("prod"):
-        return "prod"
+        return "Production"
     else:
-        return "dev"
+        return "Development"
     return fqdn
 
 

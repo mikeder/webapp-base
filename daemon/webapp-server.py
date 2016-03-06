@@ -12,6 +12,7 @@ import logging
 import tornado.httpserver
 import tornado.ioloop
 import tornado.options
+import tornado.process
 import tornado.web
 import sys
 from tornado.options import define, options
@@ -67,12 +68,11 @@ class Application(tornado.web.Application):
         loglocation = config['logging']['log_location'] + config['logging']['log_name']
         logger = logging.getLogger(config['app']['name'])
         logging.basicConfig(format='[%(levelname)s] %(asctime)s - %(name)s : %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', filename=loglocation, level=loglevel)
-        logger.info("Initializing " + config['app']['name'])
-        logger.info(config['app']['name'] + " running @ " + AppUtils.getInstance())
 
-        # Provide global application properties
-        # Check for active clients every check_interval
-        #self.check_interval = config['client']['check_interval']
+        # Start logging
+        logger.info("Initializing @ " + AppUtils.getInstance())
+        logger.debug("Processors: " + str(tornado.process.cpu_count()))
+
         # Single Database connection across all handlers
         self.database = DatabaseUtils.AppDatabase(config['database'])
 

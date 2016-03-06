@@ -5,7 +5,7 @@ import sqlite3
 class AppDatabase:
     def __init__(self, a_config):
         self.logger = logging.getLogger('AlarmDB')
-        self.database = sqlite3.connect(a_config['name'])
+        self.database = sqlite3.connect(a_config['location'] + a_config['name'])
         self.current_version = a_config['version']
         self.__upgradeDatabase()
 

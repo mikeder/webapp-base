@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block body %}
+  {% if error == 404 %}
+    Error: {{ error }} <br>
+    The page you are looking for could not be found.
+  {% elif error == 405 %}
+    Error: {{ error }} <br>
+    Invalid method requested.
+  {% else %}
+    Error: {{ error }} <br>
+    The server encountered an error while performing your request.
+  {% end %}
+{% end %}
