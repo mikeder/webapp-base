@@ -2,6 +2,7 @@ import os
 import sys
 cwd = os.getcwd()
 sys.path.append(cwd)
+import errno
 import getopt
 import json
 from lib import AppUtils
@@ -67,6 +68,11 @@ class Application(tornado.web.Application):
         loglevel = getattr(logging, config['logging']['log_level'].upper())
         loglocation = config['logging']['log_location'] + config['logging']['log_name']
         logger = logging.getLogger(config['app']['name'])
+        try:
+            os.makedirs(config['logging']['log_location'])
+        except OSError as exception:
+            if exception.errno != errno.EEXIST:
+                raise
         logging.basicConfig(format='[%(levelname)s] %(asctime)s - %(name)s : %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', filename=loglocation, level=loglevel)
 
         # Start logging

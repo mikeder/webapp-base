@@ -2,12 +2,15 @@ import datetime
 import json
 import markdown
 import uuid
+from tornado import gen
 from lib import WebHandlers
+from lib import BaseUtils
 
+@gen.coroutine
 class Alarm(WebHandlers.BaseHandler):
     def get(self):
-        alarms = self.database.getAlarms()
-        self.finish({'alarms':alarms})
+        data = yield BaseUtils.BaseUtil.async_curl_request('https://www.google.com')
+        self.finish(gen.Return(data.body))
 
     def post(self):
         self.logger.debug('Received new alarm: %s' % self.request.body)

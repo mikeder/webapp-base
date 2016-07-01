@@ -13,7 +13,7 @@
     "version": 0
   },
   "logging": {
-    "log_location": "/var/log/webapp/",
+    "log_location": "./log/",
     "log_name": "webapp.log",
     "log_level": "DEBUG"
   },

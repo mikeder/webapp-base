@@ -2,6 +2,7 @@ import logging
 import tornado.web
 import tornado.ioloop
 from lib import AppUtils
+from lib import BaseUtils
 
 class BaseHandler(tornado.web.RequestHandler):
     def __init__(self, application, request, **kwargs):
@@ -33,4 +34,4 @@ class Home(BaseHandler):
 
 class Test(BaseHandler):
     def get(self):
-        self.render('test.html')
+        self.write('1')
