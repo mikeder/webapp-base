@@ -1,14 +1,15 @@
 import logging
-import tornado.websocket
-import tornado.ioloop
+from tornado.web import RequestHandler
+from tornado.websocket import WebSocketHandler
 from lib import AppUtils
 from lib import BaseUtils
 
 
-class BaseHandler(tornado.web.RequestHandler):
+class BaseHandler(RequestHandler):
     def __init__(self, application, request, **kwargs):
         super(BaseHandler, self).__init__(application, request)
         self.logger = logging.getLogger(__name__)
+        self.logger.addHandler(logging.StreamHandler())
         self.generator = AppUtils.Generator()
         self.stringutil = AppUtils.StringUtil()
 
@@ -21,7 +22,7 @@ class BaseHandler(tornado.web.RequestHandler):
         return self.application.database
 
 
-class Alarm(tornado.web.RequestHandler):
+class Alarm(BaseHandler):
     @property
     def database(self):
         return self.application.database
@@ -41,7 +42,7 @@ class Test(BaseHandler):
         self.write('1')
 
 
-class EchoWebSocket(tornado.websocket.WebSocketHandler):
+class EchoWebSocket(WebSocketHandler):
     def open(self):
         print("WebSocket opened")
 

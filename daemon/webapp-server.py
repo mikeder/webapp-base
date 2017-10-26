@@ -78,7 +78,9 @@ class Application(tornado.web.Application):
         except OSError as exception:
             if exception.errno != errno.EEXIST:
                 raise
+        logger.addHandler(logging.StreamHandler())
         logging.basicConfig(format='[%(levelname)s] %(asctime)s - %(name)s : %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', filename=loglocation, level=loglevel)
+        logger.addHandler(logging.StreamHandler())
 
         # Start logging
         logger.info("Initializing @ " + AppUtils.getInstance())

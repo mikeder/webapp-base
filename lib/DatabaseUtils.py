@@ -2,14 +2,16 @@ import json
 import logging
 import sqlite3
 
+
 class AppDatabase:
     def __init__(self, a_config):
         self.logger = logging.getLogger('AlarmDB')
+        self.logger.addHandler(logging.StreamHandler())
         self.database = sqlite3.connect(a_config['location'] + a_config['name'])
         self.current_version = a_config['version']
         self.__upgradeDatabase()
 
-    ## Client Table Methods
+    # Client Table Methods
     def addClient(self, a_client):
         sql = "INSERT INTO client(first_seen, last_seen, uuid, address, focus, url, force_update)\
                VALUES('{0}','{1}','{2}','{3}','{4}','{5}','{6}')".format(a_client['first_seen'],
