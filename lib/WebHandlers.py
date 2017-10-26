@@ -1,8 +1,9 @@
 import logging
-import tornado.web
+import tornado.websocket
 import tornado.ioloop
 from lib import AppUtils
 from lib import BaseUtils
+
 
 class BaseHandler(tornado.web.RequestHandler):
     def __init__(self, application, request, **kwargs):
@@ -19,6 +20,7 @@ class BaseHandler(tornado.web.RequestHandler):
     def database(self):
         return self.application.database
 
+
 class Alarm(tornado.web.RequestHandler):
     @property
     def database(self):
@@ -28,10 +30,23 @@ class Alarm(tornado.web.RequestHandler):
         alarm = self.database.getAlarms(a_alarm_id)[0]
         self.render('alarm.html', alarm=alarm)
 
+
 class Home(BaseHandler):
     def get(self):
         self.render('home.html')
 
+
 class Test(BaseHandler):
     def get(self):
         self.write('1')
+
+
+class EchoWebSocket(tornado.websocket.WebSocketHandler):
+    def open(self):
+        print("WebSocket opened")
+
+    def on_message(self, message):
+        self.write_message(u"You said: " + message)
+
+    def on_close(self):
+        print("WebSocket closed")

@@ -1,14 +1,7 @@
 import os
-import sys
-cwd = os.getcwd()
-sys.path.append(cwd)
 import errno
 import getopt
 import json
-from lib import AppUtils
-from lib import DatabaseUtils
-from lib import RestAPIHandlers
-from lib import WebHandlers
 import logging
 import tornado.httpserver
 import tornado.ioloop
@@ -16,7 +9,18 @@ import tornado.options
 import tornado.process
 import tornado.web
 import sys
+
+from lib import AppUtils
+from lib import DatabaseUtils
+from lib import RestAPIHandlers
+from lib import WebHandlers
+
 from tornado.options import define, options
+
+
+cwd = os.getcwd()
+sys.path.append(cwd)
+
 
 class Application(tornado.web.Application):
     def __init__(self):
@@ -50,6 +54,7 @@ class Application(tornado.web.Application):
             (r'/api/alarm', RestAPIHandlers.Alarm),
             (r'/api/alarm/([A-Za-z0-9]+)', RestAPIHandlers.Alarm),
             (r'/api/heartbeat', RestAPIHandlers.Heartbeat),
+            (r'/ws', WebHandlers.EchoWebSocket),
             (r'.*', WebHandlers.BaseHandler)
         ]
 
@@ -81,6 +86,7 @@ class Application(tornado.web.Application):
 
         # Single Database connection across all handlers
         self.database = DatabaseUtils.AppDatabase(config['database'])
+
 
 def main():
     http_server = tornado.httpserver.HTTPServer(Application())
