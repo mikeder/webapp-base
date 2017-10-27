@@ -1,8 +1,9 @@
 import logging
+
 from tornado.web import RequestHandler
 from tornado.websocket import WebSocketHandler
-from lib import AppUtils
-from lib import BaseUtils
+
+from webappbase.lib import AppUtils
 
 
 class BaseHandler(RequestHandler):
@@ -16,17 +17,12 @@ class BaseHandler(RequestHandler):
     def write_error(self, status_code, **kwargs):
         self.render("error.html", error=status_code)
 
-    # Properties provided by Application in hud-alarm.py
     @property
     def database(self):
         return self.application.database
 
 
 class Alarm(BaseHandler):
-    @property
-    def database(self):
-        return self.application.database
-
     def get(self, a_alarm_id):
         alarm = self.database.getAlarms(a_alarm_id)[0]
         self.render('alarm.html', alarm=alarm)

@@ -1,51 +1,32 @@
-import os
+import argparse
 import errno
-import getopt
 import json
 import logging
+import os
+import sys
 import tornado.httpserver
 import tornado.ioloop
 import tornado.options
 import tornado.process
 import tornado.web
-import sys
-
 from lib import AppUtils
+from lib import Config
 from lib import DatabaseUtils
 from lib import RestAPIHandlers
-from lib import WebHandlers
-
 from tornado.options import define, options
 
+from webappbase.lib import WebHandlers
 
 cwd = os.getcwd()
 sys.path.append(cwd)
 
 
 class Application(tornado.web.Application):
-    def __init__(self):
-        # Default config path
-        config_path = 'conf/config.json'
-        # Attempt to get config override from arguments
-        try:
-            opts, args = getopt.getopt(sys.argv, ['c='], ['config='])
-        except getopt.GetoptError as err:
-            print(err)
-            sys.exit(2)
-        # Override default config with config argument (if provided)
-        for opt, arg in opts:
-            if opt in ('-c', '--config'):
-                config_path = arg
-            else:
-                print 'Invalid flag: ', opt
-                sys.exit(2)
-        # Finally load config file
-        try:
-            with open(config_path) as config_file:
-                 config = json.load(config_file)
-        except:
-            print 'Invalid config file: ', config_path
-            sys.exit(2)
+    def __init__(self, a_config):
+        """
+        Main application, external connections and services start here
+        :param a_config: a config object from which necessary options can be retrieved
+        """
 
         routes = [
             (r'/', WebHandlers.Home),
@@ -91,9 +72,24 @@ class Application(tornado.web.Application):
 
 
 def main():
-    http_server = tornado.httpserver.HTTPServer(Application())
-    http_server.listen(options.port)
-    tornado.ioloop.IOLoop.current().start()
+    parser = argparse.ArgumentParser(
+        prog='webcore',
+        description='''
+            Web application core library - webcore.py
+        '''
+    )
+    # Only supports file config for now
+    parser.add_argument('-c', '--config', help='path to a config file')
+    parser.add_argument('-p', '--port', help='listen port, overrides port in config if set\n(Default: 8000)')
+
+    args = parser.parse_args()
+    if not args.config:
+        parser.print_help()
+        sys.exit(1)
+    config = Config(args.config)
+    # http_server = tornado.httpserver.HTTPServer(Application())
+    # http_server.listen(options.port)
+    # tornado.ioloop.IOLoop.current().start()
 
 if __name__ == '__main__':
     main()

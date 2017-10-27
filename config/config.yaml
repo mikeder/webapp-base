@@ -1,0 +1,16 @@
+app:
+  name: "WebApp Base"
+client:
+  title: "WebApp Base"
+  static_path: "static"
+  template_path: "templates"
+database:
+  location: "data/"
+  name: "webapp.db"
+  version: 0
+logging:
+  log_location: "./log/"
+  log_name: "webapp.log"
+  log_level: "DEBUG"
+server:
+  port: 8001
